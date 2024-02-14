@@ -57,7 +57,10 @@ const renderPokemons = (pokemons, sortField = null, sortMode = null) => {
             pokemons.sort((a, b) => {
                 a = romanToNum(a['generation'].split('-').pop());
                 b = romanToNum(b['generation'].split('-').pop());
-                return a > b ? 1 : -1;
+                if(sortMode == 'asc'){
+                    return a > b ? 1 : -1;
+                }
+                return a < b ? 1 : -1;
             });
         }
         if(sortField == 'id' || sortField == 'name'){
