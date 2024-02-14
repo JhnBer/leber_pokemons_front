@@ -7,6 +7,18 @@ const statuses = {};
 let pokemons = [];
 let originalOrderPokemons = [];
 
+const romanToNum = (roman) => {
+    if (roman === "")           return 0;
+    if (roman.startsWith("l"))  return 50 + romanToNum(roman.substr(1));
+    if (roman.startsWith("xl")) return 40 + romanToNum(roman.substr(2));
+    if (roman.startsWith("x"))  return 10 + romanToNum(roman.substr(1));
+    if (roman.startsWith("ix")) return 9  + romanToNum(roman.substr(2));
+    if (roman.startsWith("v"))  return 5  + romanToNum(roman.substr(1));
+    if (roman.startsWith("iv")) return 4  + romanToNum(roman.substr(2));
+    if (roman.startsWith("i"))  return 1  + romanToNum(roman.substr(1));
+    return 0;
+}
+
 const renderPokemons = (pokemons, sortField = null, sortMode = null) => {
     const pokemonTemplate = (pokemon) => {
         let abils = ``;
@@ -41,7 +53,14 @@ const renderPokemons = (pokemons, sortField = null, sortMode = null) => {
     }
 
     if(sortField && (sortMode == 'asc' || 'desc')){
-        if(sortField == 'id' || sortField == 'generation' || sortField == 'name'){
+        if(sortField == 'generation'){
+            pokemons.sort((a, b) => {
+                a = romanToNum(a['generation'].split('-').pop());
+                b = romanToNum(b['generation'].split('-').pop());
+                return a > b ? 1 : -1;
+            });
+        }
+        if(sortField == 'id' || sortField == 'name'){
             if(sortMode == 'asc'){
                 pokemons.sort((a, b) => a[sortField] > b[sortField] ? 1 : -1);
             }
