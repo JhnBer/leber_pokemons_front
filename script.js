@@ -27,7 +27,7 @@ const renderPokemons = (pokemons, sortField = null, sortMode = null) => {
         });
         return `
         <div class="flex flex-col w-1/5 mb-8 px-5 min-h-full">
-            <div class="border-2 border-blue-500 bg-blue-50 rounded-xl h-full">
+            <div class="border-2 border-blue-500 rounded-xl h-full">
                 <img class="my-10 mx-auto w-20 h-20" src="${pokemon.image}" alt="">
                 <div class="px-8 pb-8">
                     <p class="mb-2">
