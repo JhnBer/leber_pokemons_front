@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEBER Frontend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto">
+        <h1 class="text-center text-3xl py-12 font-bold">
+            Покемоны с <a href="https://pokeapi.co/" class="text-blue-500 font-ultrabold">Pokeapi</a>
+        </h1>
+
+        <div class="flex w-max mx-auto mt-12">
+            <button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-300 disabled:bg-gray-400
+                       text-white font-bold 
+                       py-2 px-4 rounded-full 
+                       transition-all duration-200 ease-in-out
+                       block mx-2
+                       "
+            id="pokemons-button"
+            >
+                Новые покемоны
+            </button>
+
+            <button class="bg-pink-500 hover:bg-pink-600 active:bg-pink-300 disabled:bg-gray-400
+                       text-white font-bold 
+                       py-2 px-4 rounded-full 
+                       transition-all duration-200 ease-in-out
+                       block mx-2
+                       "
+            id="pokemons-button-add"
+            >
+                Добавить покемонов
+            </button>
+        </div>
+        
+        <div class="flex w-full mt-10">
+            <div class="pr-4 py-1 font-medium">
+                Сортировка
+            </div>
+
+            <select id="sort-field"
+                class="border-2 rounded-lg border-blue-500 px-3 py-1 mr-3"
+            >   
+                <option value="id">Id</option>
+                <option value="name">Имя</option>
+                <option value="generation">Поколение</option>
+            </select>
+
+            <button 
+                class="border-2 rounded-lg border-blue-500 hover:bg-blue-50 hover:border-blue-700 active:bg-blue-100 active:border-blue-300
+                        transition-all duration-100 ease-in-out
+                        font-medium
+                        py-1 px-3
+                        "
+                id="sort-button"
+                data-direction="none"
+            >
+                X
+            </button>
+        </div>
+
+        <div class="mt-20 h-20">
+            <div class="flex flex-wrap -mx-5" id="pokemons-list">
+            </div>
+        </div>
+    </div>
+
+    <script src="pokemons.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
