@@ -146,9 +146,9 @@ const handleSortClick = () => {
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
 }
 
-sortInput.addEventListener('change', () => {
+const handleSortFieldChange = () => {
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-});
+}
 
  
 

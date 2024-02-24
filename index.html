@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50" x-data>
+<body class="bg-gray-50">
     <div class="container mx-auto">
         <h1 class="text-center text-3xl py-12 font-bold">
             Покемоны с <a href="https://pokeapi.co/" class="text-blue-500 font-ultrabold">Pokeapi</a>
         </h1>
 
-        <div class="flex w-max mx-auto mt-12">
+        <div class="flex w-max mx-auto mt-12" x-data>
             <button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-300 disabled:bg-gray-400
                        text-white font-bold 
                        py-2 px-4 rounded-full 
@@ -39,13 +39,14 @@
             </button>
         </div>
         
-        <div class="flex w-full mt-10">
+        <div class="flex w-full mt-10" x-data>
             <div class="pr-4 py-1 font-medium">
                 Сортировка
             </div>
 
             <select id="sort-field"
                 class="border-2 rounded-lg border-blue-500 px-3 py-1 mr-3"
+                x-on:change="handleSortFieldChange"
             >   
                 <option value="id">Id</option>
                 <option value="name">Имя</option>
