@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEBER Frontend</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" x-data>
     <div class="container mx-auto">
         <h1 class="text-center text-3xl py-12 font-bold">
             Покемоны с <a href="https://pokeapi.co/" class="text-blue-500 font-ultrabold">Pokeapi</a>
@@ -20,6 +21,7 @@
                        block mx-2
                        "
             id="pokemons-button"
+            x-on:click="handleGetPokemonsClick"
             >
                 Новые покемоны
             </button>
@@ -31,6 +33,7 @@
                        block mx-2
                        "
             id="pokemons-button-add"
+            x-on:click="handleAddPokemonsClick"
             >
                 Добавить покемонов
             </button>
@@ -57,6 +60,7 @@
                         "
                 id="sort-button"
                 data-direction="none"
+                x-on:click="handleSortClick"
             >
                 X
             </button>

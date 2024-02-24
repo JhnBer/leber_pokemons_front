@@ -103,7 +103,7 @@ const freezeButtons = (state) => {
     }
 }
 
-pokemonGetButton.addEventListener('click', async () => {
+const handleGetPokemonsClick = async () => {
     freezeButtons(true);
     pokemons = await getPokemons();
 
@@ -111,9 +111,9 @@ pokemonGetButton.addEventListener('click', async () => {
 
     originalOrderPokemons = [...pokemons];
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-});
+}
 
-pokemonAddButton.addEventListener('click', async () => {
+const handleAddPokemonsClick = async () => {
     freezeButtons(true);
     const newPokemons = await getPokemons();
 
@@ -122,9 +122,9 @@ pokemonAddButton.addEventListener('click', async () => {
     pokemons = pokemons.concat(newPokemons);
     originalOrderPokemons = originalOrderPokemons.concat(newPokemons);
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-});
+}
 
-sortButton.addEventListener('click', () => {
+const handleSortClick = () => {
     sortButton.classList.toggle('rotate-180');
 
     switch (sortButton.getAttribute('data-direction')) {
@@ -144,8 +144,7 @@ sortButton.addEventListener('click', () => {
     }
     
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-});
-
+}
 
 sortInput.addEventListener('change', () => {
     renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
