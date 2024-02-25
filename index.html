@@ -8,12 +8,12 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto">
+    <div class="container mx-auto" x-data="pokemonApp">
         <h1 class="text-center text-3xl py-12 font-bold">
             Покемоны с <a href="https://pokeapi.co/" class="text-blue-500 font-ultrabold">Pokeapi</a>
         </h1>
 
-        <div class="flex w-max mx-auto mt-12" x-data>
+        <div class="flex w-max mx-auto mt-12">
             <button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-300 disabled:bg-gray-400
                        text-white font-bold 
                        py-2 px-4 rounded-full 
@@ -21,7 +21,8 @@
                        block mx-2
                        "
             id="pokemons-button"
-            x-on:click="handleGetPokemonsClick"
+            x-ref="getPokemonsButton"
+            x-on:click="getPokemons"
             >
                 Новые покемоны
             </button>
@@ -33,20 +34,22 @@
                        block mx-2
                        "
             id="pokemons-button-add"
-            x-on:click="handleAddPokemonsClick"
+            x-ref="addPokemonsButton"
+            x-on:click="addPokemons"
             >
                 Добавить покемонов
             </button>
         </div>
         
-        <div class="flex w-full mt-10" x-data>
+        <div class="flex w-full mt-10">
             <div class="pr-4 py-1 font-medium">
                 Сортировка
             </div>
 
             <select id="sort-field"
                 class="border-2 rounded-lg border-blue-500 px-3 py-1 mr-3"
-                x-on:change="handleSortFieldChange"
+                x-on:change="sortPokemons"
+                x-ref="sortField"
             >   
                 <option value="id">Id</option>
                 <option value="name">Имя</option>
@@ -61,10 +64,42 @@
                         "
                 id="sort-button"
                 data-direction="none"
-                x-on:click="handleSortClick"
+                x-ref="sortDirection"
+                x-on:click="changeSortDirection"
             >
                 X
             </button>
+        </div>
+
+        <div class="mt-20 h-20">
+            <div x-show="!pokemons.length" class="text-3xl font-bold text-center pt-20">Попробуй нажать на <span class="text-pink-500">кнопочки</span>!</div>
+            <div class="flex flex-wrap -mx-5" id="pokemons-list">
+                <template x-for="(pokemon, index) in pokemons" :key="index">
+                    <div class="flex flex-col w-1/5 mb-8 px-5 min-h-full">
+                        <div class="border-2 border-blue-500 rounded-xl h-full">
+                            <img class="my-10 mx-auto w-20 h-20" :src="pokemon.image" alt="">
+                            <div class="px-8 pb-8">
+                                <p class="mb-2">
+                                    <span class="font-medium" x-text="'ID: ' + pokemon.id"></span>
+                                </p>
+                                <p class="mb-2">
+                                    <span class="font-medium" x-text="'Name: ' + pokemon.name"></span>
+                                </p>
+                                <p class="mb-2">
+                                    <span class="font-medium" x-text="'Generation: ' + pokemon.generation"></span>
+                                </p>
+                                <p class="">
+                                    <span class="font-medium">Abilities:</span>
+                                    <template x-for="(ability, index) in pokemon.abilities">
+                                        <ul x-text="++index + ' ' + ability.ability.name"></ul>
+                                    </template>
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </template>
+            </div>
         </div>
 
         <div class="mt-20 h-20">

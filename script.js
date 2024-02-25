@@ -1,9 +1,3 @@
-const pokemonListWrapper = document.querySelector('#pokemons-list');
-const pokemonGetButton = document.querySelector('#pokemons-button');
-const pokemonAddButton = document.querySelector('#pokemons-button-add');
-const sortInput = document.querySelector('#sort-field');
-const sortButton = document.querySelector('#sort-button');
-const statuses = {};
 let pokemons = [];
 let originalOrderPokemons = [];
 
@@ -19,138 +13,107 @@ const romanToNum = (roman) => {
     return 0;
 }
 
-const renderPokemons = (pokemons, sortField = null, sortMode = null) => {
-    const pokemonTemplate = (pokemon) => {
-        let abils = ``;
-        pokemon.abilities.forEach(ability => {
-            abils += `<li>${ability.ability.name}</li>`;
-        });
-        return `
-        <div class="flex flex-col w-1/5 mb-8 px-5 min-h-full">
-            <div class="border-2 border-blue-500 rounded-xl h-full">
-                <img class="my-10 mx-auto w-20 h-20" src="${pokemon.image}" alt="">
-                <div class="px-8 pb-8">
-                    <p class="mb-2">
-                        <span class="font-medium">ID:</span> ${pokemon.id}
-                    </p>
-                    <p class="mb-2">
-                        <span class="font-medium">Name:</span> ${pokemon.name}
-                    </p>
-                    <p class="mb-2">
-                        <span class="font-medium">Generation:</span> ${pokemon.generation}
-                    </p>
-                    <p class="">
-                        <span class="font-medium">Abilities:</span>
-                        <ul>
-                            ${abils}
-                        </ul>
-                    </p>
-                </div>
-            </div>
-            
-        </div>
-        `;
-    }
-
-    if(sortField && (sortMode == 'asc' || 'desc')){
-        if(sortField == 'generation'){
-            pokemons.sort((a, b) => {
-                a = romanToNum(a['generation'].split('-').pop());
-                b = romanToNum(b['generation'].split('-').pop());
-                if(sortMode == 'asc'){
-                    return a > b ? 1 : -1;
-                }
-                return a < b ? 1 : -1;
-            });
-        }
-        if(sortField == 'id' || sortField == 'name'){
-            if(sortMode == 'asc'){
-                pokemons.sort((a, b) => a[sortField] > b[sortField] ? 1 : -1);
-            }
-            if(sortMode == 'desc'){
-                pokemons.sort((a, b) => a[sortField] < b[sortField] ? 1 : -1);
-            }
-        }
-    }
-
-    if(sortMode == 'none' && originalOrderPokemons.length > 0){
-        pokemons = [...originalOrderPokemons];
-    }
-
-    pokemonListWrapper.innerHTML = '';
-
-    let pokemonsList = '';
-    pokemons.forEach(pokemon => {
-        pokemonsList += pokemonTemplate(pokemon);
-    });
-
-    pokemonListWrapper.innerHTML = pokemonsList;
-}
-
 const getPokemons = async (count = 5) => {
     const pokemonsData = await PokemonFactory.makePokemons(count);
-    
     return pokemonsData;
 };
 
-const freezeButtons = (state) => {
-    if(!state){
-        pokemonGetButton.removeAttribute('disabled');
-        pokemonAddButton.removeAttribute('disabled');
-    }else{
-        pokemonGetButton.setAttribute('disabled', true);
-        pokemonAddButton.setAttribute('disabled', true);
-    }
-}
-
 const handleGetPokemonsClick = async () => {
-    freezeButtons(true);
     pokemons = await getPokemons();
-
-    freezeButtons(false);
-
     originalOrderPokemons = [...pokemons];
-    renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
 }
 
 const handleAddPokemonsClick = async () => {
-    freezeButtons(true);
     const newPokemons = await getPokemons();
-
-    freezeButtons(false);
-
     pokemons = pokemons.concat(newPokemons);
     originalOrderPokemons = originalOrderPokemons.concat(newPokemons);
-    renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
 }
 
-const handleSortClick = () => {
-    sortButton.classList.toggle('rotate-180');
+document.addEventListener('alpine:init', () => {
+    Alpine.data('pokemonApp', () => ({
+        pokemons: [],
+        sortDirection: 'none',
 
-    switch (sortButton.getAttribute('data-direction')) {
-        case 'desc':
-            sortButton.setAttribute('data-direction', 'none');
-            sortButton.innerHTML = 'X'
-            break;
-        case 'asc':
-            sortButton.setAttribute('data-direction', 'desc');
-            sortButton.innerHTML = '&uarr;'
-            break;
-        default:
-            sortButton.setAttribute('data-direction', 'asc');
-            sortButton.classList.remove('rotate-180');
-            sortButton.innerHTML = '&uarr;'
-            break;
-    }
-    
-    renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-}
+        sortPokemons () {
+            const sortField = this.$refs.sortField.value;
 
-const handleSortFieldChange = () => {
-    renderPokemons(pokemons, sortInput.value, sortButton.getAttribute('data-direction'));
-}
+            if(sortField && (this.sortDirection == 'asc' || 'desc')){
+                if(sortField == 'generation'){
+                    this.pokemons.sort((a, b) => {
+                        a = romanToNum(a['generation'].split('-').pop());
+                        b = romanToNum(b['generation'].split('-').pop());
+                        if(this.sortDirection == 'asc'){
+                            return a > b ? 1 : -1;
+                        }
+                        return a < b ? 1 : -1;
+                    });
+                }
+                if(sortField == 'id' || sortField == 'name'){
+                    if(this.sortDirection == 'asc'){
+                        this.pokemons.sort((a, b) => a[sortField] > b[sortField] ? 1 : -1);
+                    }
+                    if(this.sortDirection == 'desc'){
+                        this.pokemons.sort((a, b) => a[sortField] < b[sortField] ? 1 : -1);
+                    }
+                }
+            }
+        
+            if(this.sortDirection == 'none' && originalOrderPokemons.length > 0){
+                this.pokemons = [...originalOrderPokemons];
+            }
+        },
 
- 
+        freezeButtons (state) {
+            if(!state){
+                this.$refs.getPokemonsButton.removeAttribute('disabled');
+                this.$refs.addPokemonsButton.removeAttribute('disabled');
+            }else{
+                this.$refs.getPokemonsButton.setAttribute('disabled', true);
+                this.$refs.addPokemonsButton.setAttribute('disabled', true);
+            }
+        },
+
+        changeSortDirection () {
+            this.$refs.sortDirection.classList.toggle('rotate-180');
+
+            switch (this.sortDirection) {
+                case 'desc':
+                    this.sortDirection = 'none';
+                    this.$refs.sortDirection.innerHTML = 'X'
+                    break;
+                case 'asc':
+                    this.sortDirection = 'desc';
+                    this.$refs.sortDirection.innerHTML = '&uarr;'
+                    break;
+                default:
+                    this.sortDirection = 'asc';
+                    this.$refs.sortDirection.classList.remove('rotate-180');
+                    this.$refs.sortDirection.innerHTML = '&uarr;'
+                    break;
+            }
+
+            this.$refs.sortDirection.setAttribute('data-direction', this.sortDirection);
+            this.sortPokemons();
+        },
+
+        async getPokemons () {
+            this.freezeButtons(true);
+            await handleGetPokemonsClick();
+            this.freezeButtons(false);
+            this.pokemons = pokemons;
+            this.sortPokemons();
+        },
+
+        async addPokemons () {
+            this.freezeButtons(true);
+            await handleAddPokemonsClick();
+            this.freezeButtons(false);
+            this.pokemons = pokemons;
+            this.sortPokemons();
+        },
+
+    }));
+});
 
 
 
